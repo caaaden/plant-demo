@@ -207,7 +207,7 @@ class NotificationScreen extends StatelessWidget {
           ),
           SizedBox(height: 24),
           Text(
-            plantProvider.hasPlant ? '모든 소식을 확인했어요!' : '아직 식물 친구가 없어요',
+            plantProvider.hasPlant ? '알림이 없어요' : '아직 식물이 없어요',
             style: TextStyle(
               fontSize: 18,
               color: Color(0xFF666666),
@@ -218,8 +218,8 @@ class NotificationScreen extends StatelessWidget {
           SizedBox(height: 8),
           Text(
             plantProvider.hasPlant
-                ? '식물이 도움이 필요하면 여기서 알려드릴게요'
-                : '홈 화면에서 식물 친구를 만들면 소식을 받을 수 있어요',
+                ? '새로운 알림이 있으면 여기에 표시됩니다'
+                : '홈에서 식물을 등록하면 알림을 받을 수 있어요',
             style: TextStyle(
               fontSize: 14,
               color: Color(0xFF999999),
@@ -244,7 +244,7 @@ class NotificationScreen extends StatelessWidget {
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: Text('식물 친구 만들러 가기'),
+              child: Text('식물 등록하러 가기'),
             ),
           ],
         ],
@@ -304,7 +304,7 @@ class NotificationScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('확인했어요'),
+              child: Text('확인'),
             ),
             if (notification.type == 'warning' || notification.type == 'error')
               ElevatedButton(
@@ -317,7 +317,7 @@ class NotificationScreen extends StatelessWidget {
                   backgroundColor: Color(0xFF4CAF50),
                   foregroundColor: Colors.white,
                 ),
-                child: Text('설정 보러가기'),
+                child: Text('설정으로 이동'),
               ),
           ],
         );

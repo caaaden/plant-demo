@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 24),
           Text(
-            '아직 식물 친구가 없어요',
+            '아직 등록한 식물이 없어요',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            '첫 번째 식물 친구를 만나볼까요?',
+            '내 식물을 등록해볼까요?',
             style: TextStyle(
               fontSize: 14,
               color: Color(0xFF666666),
@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             child: Text(
-              '식물 친구 만들기',
+              '내 식물 등록하기',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -209,7 +209,7 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '우리 식물 컨디션',
+                      '내 식물 상태',
                       style: TextStyle(
                         fontSize: 14,
                         color: Color(0xFF666666),

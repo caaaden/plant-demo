@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 // 등록된 식물 섹션
                 SettingsSection(
-                  title: '내 식물 친구',
+                  title: '나의 식물',
                   child: _buildPlantSection(context, plantProvider),
                 ),
 
@@ -120,7 +120,7 @@ class SettingsScreen extends StatelessWidget {
         SizedBox(height: 8),
 
         Text(
-          '지금까지의 환경 설정',
+          '환경 설정',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 14,
@@ -163,7 +163,7 @@ class SettingsScreen extends StatelessWidget {
               _showPlantSettingsDialog(context);
             },
             icon: Icon(Icons.tune),
-            label: Text('환경 설정 변경하기'),
+            label: Text('설정 변경하기'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFF4CAF50),
               foregroundColor: Colors.white,
@@ -184,7 +184,7 @@ class SettingsScreen extends StatelessWidget {
               _showDeletePlantDialog(context, plantProvider);
             },
             icon: Icon(Icons.logout),
-            label: Text('식물 친구 보내주기'),
+            label: Text('식물 삭제'),
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.red,
               side: BorderSide(color: Colors.red),
@@ -218,7 +218,7 @@ class SettingsScreen extends StatelessWidget {
                   SizedBox(height: 4),
                   Text(
                     settingsProvider.pushNotificationEnabled
-                        ? '식물이 도움이 필요할 때 알려드려요'
+                        ? '알림이 켜져있어요'
                         : '알림이 꺼져있어요. 켜주시면 식물을 더 잘 돌볼 수 있어요',
                     style: TextStyle(
                       fontSize: 12,
@@ -234,7 +234,7 @@ class SettingsScreen extends StatelessWidget {
                 settingsProvider.togglePushNotification();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(value ? '알림이 켜졌어요! 이제 식물 상태를 놓치지 않을 거예요' : '알림이 꺼졌어요'),
+                    content: Text(value ? '알림이 켜졌어요' : '알림이 꺼졌어요'),
                     backgroundColor: Colors.green,
                     duration: Duration(seconds: 2),
                   ),
@@ -289,7 +289,7 @@ class SettingsScreen extends StatelessWidget {
               settingsProvider.changeTheme(value);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('테마가 바뀌었어요! 어떠세요?'),
+                  content: Text('테마가 변경되었어요'),
                   backgroundColor: Colors.green,
                   duration: Duration(seconds: 2),
                 ),
@@ -394,14 +394,14 @@ class SettingsScreen extends StatelessWidget {
                 if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('식물 친구와 헤어졌어요. 언제든 새로운 친구를 만들 수 있어요'),
+                      content: Text('식물이 삭제되었어요'),
                       backgroundColor: Colors.green,
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(plantProvider.error ?? '헤어질 수 없었어요. 다시 시도해주세요'),
+                      content: Text(plantProvider.error ?? '삭제에 실패했습니다. 다시 시도해주세요'),
                       backgroundColor: Colors.red,
                     ),
                   );

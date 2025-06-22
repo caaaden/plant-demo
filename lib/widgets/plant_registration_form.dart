@@ -64,7 +64,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
   Future<void> _handleSubmit(BuildContext context) async {
     if (_plantName.isEmpty || _plantSpecies.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('식물 이름과 종류를 입력해주세요.')),
+        SnackBar(content: Text('식물 이름과 종류를 입력해주세요')),
       );
       return;
     }
@@ -91,14 +91,14 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('새로운 식물 친구가 생겼어요!'),
+          content: Text('식물이 등록되었습니다'),
           backgroundColor: Colors.green,
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(plantProvider.error ?? '식물 친구를 만들지 못했어요. 다시 시도해주세요'),
+          content: Text(plantProvider.error ?? '등록에 실패했습니다. 다시 시도해주세요'),
           backgroundColor: Colors.red,
         ),
       );
@@ -128,7 +128,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
 
       // 랜덤하게 성공/실패 시뮬레이션 (90% 성공률)
       if (Random().nextDouble() < 0.1) {
-        throw Exception('식물 인식에 실패했습니다. 더 선명한 사진으로 다시 시도해주세요.');
+        throw Exception('식물 인식에 실패했습니다. 더 선명한 사진으로 다시 시도해주세요');
       }
 
       // 모의 AI 인식 결과 생성
@@ -136,7 +136,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
       List<PlantProfile> profiles = plantProvider.plantProfiles;
 
       if (profiles.isEmpty) {
-        throw Exception('식물 데이터베이스를 불러올 수 없습니다.');
+        throw Exception('식물 데이터베이스를 불러올 수 없습니다');
       }
 
       PlantProfile selectedProfile = profiles[Random().nextInt(profiles.length)];
@@ -163,13 +163,13 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('AI가 식물을 알아봤어요! 새로운 친구가 생겼네요\n${selectedProfile.species} (정확도: ${(confidence * 100).toStringAsFixed(1)}%)'),
+            content: Text('AI 인식이 완료되었습니다\n${selectedProfile.species} (정확도: ${(confidence * 100).toStringAsFixed(1)}%)'),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 4),
           ),
         );
       } else {
-        throw Exception(plantProvider.error ?? '식물 등록에 실패했습니다.');
+        throw Exception(plantProvider.error ?? '식물 등록에 실패했습니다');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -243,7 +243,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('다음에요'),
+              child: Text('취소'),
             ),
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(true),
@@ -285,7 +285,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '식물 친구 만들기',
+                        '식물 등록',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -397,7 +397,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
           ),
           SizedBox(height: 24),
           Text(
-            _isAIProcessing ? 'AI가 식물을 알아보고 있어요...' : 'AI 식물 알아보기',
+            _isAIProcessing ? 'AI가 식물을 분석하고 있습니다...' : 'AI 식물 인식',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -408,8 +408,8 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
           SizedBox(height: 8),
           Text(
             _isAIProcessing
-                ? '조금만 기다려주세요! 거의 다 됐어요'
-                : '사진을 찍어주시면 AI가 어떤 식물인지 알아볼게요',
+                ? '잠시만 기다려주세요'
+                : '사진을 찍어주시면 AI가 식물을 인식해드립니다',
             style: TextStyle(
               fontSize: 14,
               color: Color(0xFF666666),
@@ -430,7 +430,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
               ),
             ),
             child: Text(
-              _isAIProcessing ? '알아보는 중...' : '사진 찍기',
+              _isAIProcessing ? '분석 중...' : '사진 찍기',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -581,7 +581,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
               return ElevatedButton(
                 onPressed: plantProvider.isLoading ? null : () => _handleSubmit(context),
                 child: Text(
-                  '식물 친구 만들기',
+                  '식물 등록하기',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -624,7 +624,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
               ),
               SizedBox(width: 8),
               Text(
-                '우리 식물에게 딱 맞는 환경',
+                '적정 환경 설정',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.green[800],
@@ -676,7 +676,7 @@ class _PlantRegistrationFormState extends State<PlantRegistrationForm> {
           ),
           SizedBox(height: 8),
           Text(
-            '나중에 설정에서 언제든 바꿀 수 있어요',
+            '나중에 설정에서 언제든 변경할 수 있습니다',
             style: TextStyle(
               fontSize: 12,
               color: Colors.green[600],

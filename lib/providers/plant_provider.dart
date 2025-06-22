@@ -256,10 +256,10 @@ class PlantProvider extends ChangeNotifier {
     }
   }
 
-  // 주기적 업데이트 시작 (데모용으로 더 빠른 주기)
+  // 주기적 업데이트 시작 (데모용으로 빠른 주기)
   void _startPeriodicUpdates() {
     _stopPeriodicUpdates();
-    _sensorTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _sensorTimer = Timer.periodic(Duration(seconds: 8), (timer) {
       if (_plant != null) {
         loadPlantData();
       }
@@ -317,13 +317,13 @@ class PlantProvider extends ChangeNotifier {
     if (_plant == null) return;
 
     List<String> demoMessages = [
-      '물주기 시간이에요! 목이 마른 것 같아요',
-      '햇빛이 부족해요. 밝은 곳으로 옮겨주세요',
-      '습도가 조금 낮네요. 분무기로 촉촉하게 해주세요',
-      '온도가 좀 맞지 않아요. 확인해주세요',
-      '식물 상태가 아주 좋아요! 잘 키우고 계시네요',
-      '새싹이 나올 것 같은 기분이에요',
-      '식물이 행복해해요! 계속 이렇게 돌봐주세요',
+      '토양이 건조합니다. 물을 주세요',
+      '빛이 부족합니다. 밝은 곳으로 옮겨주세요',
+      '습도가 낮습니다. 분무기를 사용해주세요',
+      '온도를 확인해주세요',
+      '현재 상태가 매우 좋습니다',
+      '새로운 성장이 감지되었습니다',
+      '모든 환경이 적절합니다',
     ];
 
     List<String> types = ['warning', 'info', 'success', 'error'];

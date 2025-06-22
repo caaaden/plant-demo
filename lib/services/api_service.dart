@@ -35,7 +35,7 @@ class ApiService {
         id: _notifications.length + 1,
         plantId: plantId,
         type: 'success',
-        message: '${plant.name}과(와) 함께하는 여행이 시작되었어요!',
+        message: '${plant.name} 등록이 완료되었습니다',
         timestamp: DateTime.now(),
         isRead: false,
       ));
@@ -64,7 +64,7 @@ class ApiService {
         id: _notifications.length + 1,
         plantId: plantId,
         type: 'info',
-        message: '${plant.name}의 환경 설정을 새롭게 조정했어요',
+        message: '환경 설정이 변경되었습니다',
         timestamp: DateTime.now(),
         isRead: false,
       ));
@@ -424,13 +424,16 @@ class ApiService {
     // 시간대별 변화 요소
     double timeOfDayFactor = _getTimeOfDayFactor(now.hour);
 
+    // 더 변동성 있는 데이터 생성 (가끔 범위를 벗어나도록)
+    double randomFactor = 0.8 + (_random.nextDouble() * 0.4); // 0.8 ~ 1.2
+
     return SensorData(
       id: 'sensor_${now.millisecondsSinceEpoch}',
       plantId: plantId,
-      temperature: _generateVariantValue(22, 3, timeOfDayFactor),
-      humidity: _generateVariantValue(55, 8, 1.0),
-      soilMoisture: _generateVariantValue(50, 6, 1.0 - (_timeCounter * 0.002)), // 시간이 지나면서 서서히 감소
-      light: _generateVariantValue(65, 12, timeOfDayFactor),
+      temperature: _generateVariantValue(22, 5, timeOfDayFactor * randomFactor), // 변동성 증가
+      humidity: _generateVariantValue(55, 12, randomFactor), // 변동성 증가
+      soilMoisture: _generateVariantValue(50, 10, 1.0 - (_timeCounter * 0.003) * randomFactor), // 더 빠른 감소
+      light: _generateVariantValue(65, 18, timeOfDayFactor * randomFactor), // 변동성 증가
       timestamp: now,
     );
   }
@@ -463,13 +466,24 @@ class ApiService {
     DateTime now = DateTime.now();
 
     // 온도 체크
-    if (data.temperature < plant.optimalTempMin || data.temperature > plant.optimalTempMax) {
-      if (_shouldGenerateWarning('temperature')) {
+    if (data.temperature < plant.optimalTempMin) {
+      if (_shouldGenerateWarning('temp_low')) {
         _notifications.add(NotificationItem(
           id: _notifications.length + 1,
           plantId: plant.id,
           type: 'warning',
-          message: '온도가 좀 맞지 않아요 (${data.temperature.toStringAsFixed(1)}°C). 적정 온도는 ${plant.optimalTempMin.toInt()}-${plant.optimalTempMax.toInt()}°C예요',
+          message: '온도가 낮습니다 (${data.temperature.toStringAsFixed(1)}°C). 따뜻한 곳으로 옮겨주세요',
+          timestamp: now,
+          isRead: false,
+        ));
+      }
+    } else if (data.temperature > plant.optimalTempMax) {
+      if (_shouldGenerateWarning('temp_high')) {
+        _notifications.add(NotificationItem(
+          id: _notifications.length + 1,
+          plantId: plant.id,
+          type: 'warning',
+          message: '온도가 높습니다 (${data.temperature.toStringAsFixed(1)}°C). 시원한 곳으로 옮겨주세요',
           timestamp: now,
           isRead: false,
         ));
@@ -477,13 +491,24 @@ class ApiService {
     }
 
     // 습도 체크
-    if (data.humidity < plant.optimalHumidityMin || data.humidity > plant.optimalHumidityMax) {
-      if (_shouldGenerateWarning('humidity')) {
+    if (data.humidity < plant.optimalHumidityMin) {
+      if (_shouldGenerateWarning('humidity_low')) {
         _notifications.add(NotificationItem(
           id: _notifications.length + 1,
           plantId: plant.id,
           type: 'warning',
-          message: '습도를 조금 조절해주세요 (${data.humidity.toStringAsFixed(0)}%). 적정 습도는 ${plant.optimalHumidityMin.toInt()}-${plant.optimalHumidityMax.toInt()}%예요',
+          message: '습도가 낮습니다 (${data.humidity.toStringAsFixed(0)}%). 분무기를 사용해주세요',
+          timestamp: now,
+          isRead: false,
+        ));
+      }
+    } else if (data.humidity > plant.optimalHumidityMax) {
+      if (_shouldGenerateWarning('humidity_high')) {
+        _notifications.add(NotificationItem(
+          id: _notifications.length + 1,
+          plantId: plant.id,
+          type: 'info',
+          message: '습도가 높습니다 (${data.humidity.toStringAsFixed(0)}%). 환기를 시켜주세요',
           timestamp: now,
           isRead: false,
         ));
@@ -497,7 +522,7 @@ class ApiService {
           id: _notifications.length + 1,
           plantId: plant.id,
           type: 'error',
-          message: '목이 말라해요! 물을 주시겠어요? (현재 ${data.soilMoisture.toStringAsFixed(0)}%)',
+          message: '토양이 건조합니다 (${data.soilMoisture.toStringAsFixed(0)}%). 물을 주세요',
           timestamp: now,
           isRead: false,
         ));
@@ -508,7 +533,7 @@ class ApiService {
           id: _notifications.length + 1,
           plantId: plant.id,
           type: 'warning',
-          message: '흙이 너무 촉촉해요 (${data.soilMoisture.toStringAsFixed(0)}%). 조금 말려주세요',
+          message: '토양이 너무 젖어있습니다 (${data.soilMoisture.toStringAsFixed(0)}%). 물주기를 중단하세요',
           timestamp: now,
           isRead: false,
         ));
@@ -522,7 +547,45 @@ class ApiService {
           id: _notifications.length + 1,
           plantId: plant.id,
           type: 'info',
-          message: '햇빛이 부족해요 (${data.light.toStringAsFixed(0)}%). 밝은 곳으로 옮겨주세요',
+          message: '빛이 부족합니다 (${data.light.toStringAsFixed(0)}%). 밝은 곳으로 옮겨주세요',
+          timestamp: now,
+          isRead: false,
+        ));
+      }
+    } else if (data.light > plant.optimalLightMax) {
+      if (_shouldGenerateWarning('light_high')) {
+        _notifications.add(NotificationItem(
+          id: _notifications.length + 1,
+          plantId: plant.id,
+          type: 'warning',
+          message: '빛이 너무 강합니다 (${data.light.toStringAsFixed(0)}%). 그늘로 옮겨주세요',
+          timestamp: now,
+          isRead: false,
+        ));
+      }
+    }
+
+    // 좋은 상태일 때도 가끔 알림
+    bool tempOk = data.temperature >= plant.optimalTempMin && data.temperature <= plant.optimalTempMax;
+    bool humidityOk = data.humidity >= plant.optimalHumidityMin && data.humidity <= plant.optimalHumidityMax;
+    bool soilOk = data.soilMoisture >= plant.optimalSoilMoistureMin && data.soilMoisture <= plant.optimalSoilMoistureMax;
+    bool lightOk = data.light >= plant.optimalLightMin && data.light <= plant.optimalLightMax;
+
+    if (tempOk && humidityOk && soilOk && lightOk) {
+      if (_shouldGenerateWarning('good_status')) {
+        List<String> goodMessages = [
+          '모든 환경이 적절합니다. 식물이 건강하게 자라고 있어요',
+          '현재 상태가 매우 좋습니다. 계속 이렇게 관리해주세요',
+          '최적의 환경을 유지하고 있습니다. 잘하고 계세요',
+          '식물 상태가 양호합니다. 꾸준히 관리해주세요',
+        ];
+        String message = goodMessages[_random.nextInt(goodMessages.length)];
+
+        _notifications.add(NotificationItem(
+          id: _notifications.length + 1,
+          plantId: plant.id,
+          type: 'success',
+          message: message,
           timestamp: now,
           isRead: false,
         ));
@@ -537,7 +600,28 @@ class ApiService {
     DateTime now = DateTime.now();
     DateTime? lastTime = _lastWarningTimes[type];
 
-    if (lastTime == null || now.difference(lastTime).inMinutes >= 30) {
+    // 알림 타입별로 다른 간격 적용
+    int intervalMinutes;
+    switch (type) {
+      case 'soil_low': // 물 부족은 더 자주 알림
+        intervalMinutes = 5;
+        break;
+      case 'good_status': // 좋은 상태는 가끔만
+        intervalMinutes = 60;
+        break;
+      case 'temp_low':
+      case 'temp_high':
+      case 'humidity_low':
+      case 'humidity_high':
+      case 'light_low':
+      case 'light_high':
+      case 'soil_high':
+      default:
+        intervalMinutes = 10;
+        break;
+    }
+
+    if (lastTime == null || now.difference(lastTime).inMinutes >= intervalMinutes) {
       _lastWarningTimes[type] = now;
       return true;
     }
